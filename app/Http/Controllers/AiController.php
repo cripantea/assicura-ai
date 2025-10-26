@@ -12,7 +12,7 @@ class AiController extends Controller
     public function generate(Request $request)
     {
 
-        dd($request->all());
+        //dd($request->all());
         $data = $request->validate([
             'file' => ['required','file','mimes:pdf','max:20480'], // 20 MB
         ]);

@@ -39,12 +39,15 @@ class EmailGenerator extends Page implements HasForms
                 ->acceptedFileTypes(['application/pdf'])
                 ->directory('tmp') // optional
                 ->required()
+                ->extraAttributes([
+                    'class' => 'custom-double-height', // <-- Apply custom class here
+                ])
                 ->multiple(false),
 
-            Textarea::make('body')
-                ->label('Draft (editable)')
-                ->live()
-                ->rows(10),
+//            Textarea::make('body')
+//                ->label('Draft (editable)')
+//                ->live()
+//                ->rows(10),
 
             TextInput::make('email')
                 ->email()
@@ -92,11 +95,31 @@ class EmailGenerator extends Page implements HasForms
             // $emailContent = $this->renderEmailTemplate($extractedData);
 
             $this->subject = $extractedData['Subject'];
-            $this->body = $extractedData['Body'];
+            $this->body = str_replace('%0D%0A', chr(13), $extractedData['Body']);
             $this->email = $extractedData['Email'];
 
             Notification::make()->title('Bozza Generata')->success()->send();
 
+            // NUOVO: Esegui il codice JavaScript per attivare il mailto:
+            $this->js('
+                // Incapsula la logica per consentire l\'uso di \'var\' e codice multilinea.
+                (function () {
+                    var email = $wire.email;
+                    var subject = $wire.subject;
+                    var body = $wire.body;
+
+                    if (email && subject && body) {
+                        // Codifica i componenti dell\'URL per mailto:
+                        var mailtoUrl = "mailto:" + encodeURIComponent(email) +
+                                        "?subject=" + encodeURIComponent(subject) +
+                                        "&body=" + encodeURIComponent(body);
+
+                        window.open(mailtoUrl, "_self");
+                    } else {
+                        console.error("Dati email mancanti per l\'invio automatico.");
+                    }
+                })();
+            ');
         } catch (\Throwable $e) {
             Notification::make()->title('Errore Inatteso')
                 ->body($e->getMessage())->danger()->send();
