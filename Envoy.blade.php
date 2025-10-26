@@ -87,7 +87,7 @@ cd {{ $newReleaseDir }};
 {{-- TODO no-dev --}}
 {{-- {{ $php }} {{$baseDir}}/composer.phar install --prefer-dist --no-scripts --no-dev -q -o; --}}
 {{-- {{ $php }} {{$baseDir}}/composer.phar install --prefer-dist --no-scripts --no-dev -q -o; --}}
-composer update;
+
 composer install --prefer-dist --no-scripts -q -o --no-dev;
 @endtask
 
