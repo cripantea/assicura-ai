@@ -88,7 +88,7 @@ cd {{ $newReleaseDir }};
 {{-- {{ $php }} {{$baseDir}}/composer.phar install --prefer-dist --no-scripts --no-dev -q -o; --}}
 {{-- {{ $php }} {{$baseDir}}/composer.phar install --prefer-dist --no-scripts --no-dev -q -o; --}}
 composer update;
-composer install --prefer-dist --no-scripts -q -o;
+composer install --prefer-dist --no-scripts -q -o --no-dev;
 @endtask
 
 @task('runNpm', ['on' => 'remote'])
